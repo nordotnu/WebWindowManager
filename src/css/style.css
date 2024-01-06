@@ -3,16 +3,14 @@
   margin: 0;
 }
 
-h1 {
-  color: aliceblue;
-}
 .desktop {
   width: 100%;
   height: 100vh;
 }
+
 .window {
   background: black;
-  position: relative;
+  position: absolute;
   border: 5px solid purple;
   top: 100px;
   left: 20px;
@@ -20,3 +18,23 @@ h1 {
   width: 500px;
 }
 
+h1 {
+  color: aliceblue;
+}
+
+.bar {
+  background: red;
+  cursor: move;
+}
+
+.scaler {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  /* set the right to 0 */
+  background: red;
+}
+
+.noselect {
+  user-select: none;
+}

@@ -9,4 +9,5 @@ function main () {
   const desktop = new Desktop()
   desktop.addWindow('First Window')
   desktop.addWindow('Second Window')
+  desktop.addWindow('Third Window')
 }
