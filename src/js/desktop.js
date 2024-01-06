@@ -8,6 +8,10 @@ export default class Desktop {
     })
     this.desktop.addEventListener('dragover', this.scalerHandler)
     this.desktop.addEventListener('drop', this.dropHandler)
+
+    // TESTING
+    this.desktop.querySelector('.maximize')
+      .addEventListener('click', (e) => this.maximizeAll(this))
   }
 
   /**
@@ -17,13 +21,25 @@ export default class Desktop {
   addWindow (windowContent) {
     const contents = document.createElement('h2')
     contents.innerText = 'HEHE'
-    const wmWindow = new WMWindow(windowContent, 500, 300, true, contents)
+    const wmWindow = new WMWindow(windowContent, 500, 300, true, contents,
+      (wmWindow) => this.exitHandler(wmWindow, this))
     this.windows.push(wmWindow)
     this.desktop.appendChild(wmWindow.windowElement)
   }
 
+  maximizeAll (desktop) {
+    desktop.windows.forEach((wmWindow) => {
+      wmWindow.toggleMinimize(wmWindow)
+    })
+  }
+
+  exitHandler (wmWindow, desktop) {
+    desktop.windows.pop(wmWindow)
+    wmWindow.windowElement.remove()
+  }
+
   /**
-   *
+   * Handles dropping of a draged window
    * @param {Event} event The event object.
    */
   dropHandler (event) {

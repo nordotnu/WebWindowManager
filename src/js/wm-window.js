@@ -6,14 +6,15 @@ export default class WMWindow {
     height: '100px',
     top: '0px',
     left: '0px',
-    fullscreen: false
+    fullscreen: false,
+    minimized: false
   }
 
-  constructor (title, width, height, scaleble, contents) {
-    this.windowElement = this.createWindow(title, width, height, scaleble, contents)
+  constructor (title, width, height, scaleble, contents, exitCallback) {
+    this.windowElement = this.createWindow(title, width, height, scaleble, contents, exitCallback)
   }
 
-  createWindow (title, width, height, scaleble, contents) {
+  createWindow (title, width, height, scaleble, contents, exitCallback) {
     this.savedPosition.width = width + 'px'
     this.savedPosition.height = height + 'px'
     // Create the bar
@@ -39,6 +40,7 @@ export default class WMWindow {
     const minimizeButton = document.createElement('button')
     minimizeButton.classList.add('minimize')
     minimizeButton.innerText = '_'
+    minimizeButton.addEventListener('click', (e) => this.toggleMinimize(this))
     controlsElement.appendChild(minimizeButton)
 
     // Add scaler element
@@ -65,6 +67,7 @@ export default class WMWindow {
     const exitButton = document.createElement('button')
     exitButton.classList.add('exit')
     exitButton.innerText = 'X'
+    exitButton.addEventListener('click', (e) => exitCallback(this))
     controlsElement.appendChild(exitButton)
     bar.appendChild(controlsElement)
 
@@ -129,7 +132,7 @@ export default class WMWindow {
    * @param {WMWindow} obj the window object
    */
   fullscreenHandler (event, obj) {
-    const target = event.target.closest('.window')
+    const target = obj.windowElement
     console.log(target)
     const resizer = target.getElementsByClassName('scaler')[0]
     if (!obj.savedPosition.fullscreen) {
@@ -147,6 +150,16 @@ export default class WMWindow {
     }
     while (target.nextElementSibling != null) {
       target.parentNode.insertBefore(target.nextElementSibling, target)
+    }
+  }
+
+  toggleMinimize (obj) {
+    if (obj.savedPosition.minimized) {
+      obj.windowElement.classList.remove('hidden')
+      obj.savedPosition.minimized = false
+    } else {
+      obj.windowElement.classList.add('hidden')
+      obj.savedPosition.minimized = true
     }
   }
 
