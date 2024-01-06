@@ -35,5 +35,8 @@
     "stylelint": "^15.11.0",
     "stylelint-config-recommended": "^13.0.0",
     "vite": "^5.0.9"
+  },
+  "dependencies": {
+    "jshint": "^2.13.6"
   }
 }

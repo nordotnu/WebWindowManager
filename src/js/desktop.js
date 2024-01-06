@@ -1,8 +1,8 @@
-import WindowFactory from './window-factory'
+import WMWindow from './wm-window'
 export default class Desktop {
+  windows = []
   constructor () {
     this.desktop = document.querySelector('.desktop')
-
     this.desktop.addEventListener('dragenter', (event) => {
       event.preventDefault()
     })
@@ -15,11 +15,11 @@ export default class Desktop {
    * @param {HTMLElement} windowContent The contents of the window
    */
   addWindow (windowContent) {
-    const windowFactory = new WindowFactory()
     const contents = document.createElement('h2')
     contents.innerText = 'HEHE'
-    const windowElement = windowFactory.createWindow(windowContent, 100, 100, true, contents)
-    this.desktop.appendChild(windowElement)
+    const wmWindow = new WMWindow(windowContent, 500, 300, true, contents)
+    this.windows.push(wmWindow)
+    this.desktop.appendChild(wmWindow.windowElement)
   }
 
   /**
