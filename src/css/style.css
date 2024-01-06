@@ -41,6 +41,29 @@ h1 {
 .noselect {
   user-select: none;
 }
+.taskbar {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #000;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  z-index: 999;
+}
+.tasks {
+  display: flex;
+  padding-block: 8px;
+}
+.task {
+  margin-inline: 8px;
+  width: 36px;
+  height: 36px;
+}
+.clock {
+  padding-right: 10px;
+}
 
 * .hidden {
   display: none;

@@ -1,6 +1,5 @@
 export default class WMWindow {
   // Used only to keep track of the window wxh for fullscreen
-
   savedPosition = {
     width: '100px',
     height: '100px',
@@ -10,11 +9,12 @@ export default class WMWindow {
     minimized: false
   }
 
-  constructor (title, width, height, scaleble, contents, exitCallback) {
-    this.windowElement = this.createWindow(title, width, height, scaleble, contents, exitCallback)
+  constructor (title, width, height, scaleble, contents, exitCallback, task) {
+    this.windowElement = this.createWindow(title, width, height, scaleble, contents, exitCallback, task)
   }
 
-  createWindow (title, width, height, scaleble, contents, exitCallback) {
+  createWindow (title, width, height, scaleble, contents, exitCallback, task) {
+    this.task = task
     this.savedPosition.width = width + 'px'
     this.savedPosition.height = height + 'px'
     // Create the bar

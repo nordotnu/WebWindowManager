@@ -1,8 +1,10 @@
+import TaskBar from './taskbar'
 import WMWindow from './wm-window'
 export default class Desktop {
   windows = []
   constructor () {
     this.desktop = document.querySelector('.desktop')
+    this.taskbar = new TaskBar()
     this.desktop.addEventListener('dragenter', (event) => {
       event.preventDefault()
     })
@@ -21,8 +23,9 @@ export default class Desktop {
   addWindow (windowContent) {
     const contents = document.createElement('h2')
     contents.innerText = 'HEHE'
-    const wmWindow = new WMWindow(windowContent, 500, 300, true, contents,
+    const wmWindow = new WMWindow(windowContent, 500, 300, false, contents,
       (wmWindow) => this.exitHandler(wmWindow, this))
+    wmWindow.task = this.taskbar.addTask(windowContent, (e) => wmWindow.toggleMinimize(wmWindow))
     this.windows.push(wmWindow)
     this.desktop.appendChild(wmWindow.windowElement)
   }
@@ -35,6 +38,7 @@ export default class Desktop {
 
   exitHandler (wmWindow, desktop) {
     desktop.windows.pop(wmWindow)
+    desktop.taskbar.removeTask(wmWindow.task)
     wmWindow.windowElement.remove()
   }
 
