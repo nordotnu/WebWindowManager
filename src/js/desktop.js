@@ -10,10 +10,6 @@ export default class Desktop {
     })
     this.desktop.addEventListener('dragover', this.scalerHandler)
     this.desktop.addEventListener('drop', this.dropHandler)
-
-    // TESTING
-    this.desktop.querySelector('.maximize')
-      .addEventListener('click', (e) => this.maximizeAll(this))
   }
 
   /**
@@ -23,19 +19,20 @@ export default class Desktop {
   addWindow (windowContent) {
     const contents = document.createElement('h2')
     contents.innerText = 'HEHE'
-    const wmWindow = new WMWindow(windowContent, 500, 300, false, contents,
+    const wmWindow = new WMWindow(windowContent, 500, 300, true, contents,
       (wmWindow) => this.exitHandler(wmWindow, this))
-    wmWindow.task = this.taskbar.addTask(windowContent, (e) => wmWindow.toggleMinimize(wmWindow))
+    wmWindow.task = this.taskbar.addTask(windowContent, (e) => {
+      wmWindow.toggleMinimize(wmWindow, true)
+    })
     this.windows.push(wmWindow)
     this.desktop.appendChild(wmWindow.windowElement)
   }
 
-  maximizeAll (desktop) {
-    desktop.windows.forEach((wmWindow) => {
-      wmWindow.toggleMinimize(wmWindow)
-    })
-  }
-
+  /**
+   * Handles the exiting of a window.
+   * @param {WMWindow} wmWindow The window object.
+   * @param {Desktop} desktop the desktop object.
+   */
   exitHandler (wmWindow, desktop) {
     desktop.windows.pop(wmWindow)
     desktop.taskbar.removeTask(wmWindow.task)
@@ -53,11 +50,6 @@ export default class Desktop {
 
       target.style.left = (event.clientX + parseInt(offset[0])) + 'px'
       target.style.top = (event.clientY + parseInt(offset[1])) + 'px'
-
-      // Move the dragged window to the bottom of the dom tree
-      while (target.nextElementSibling != null) {
-        target.parentNode.insertBefore(target.nextElementSibling, target)
-      }
     }
 
     event.preventDefault()

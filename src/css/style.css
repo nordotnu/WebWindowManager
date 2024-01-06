@@ -9,13 +9,16 @@
 }
 
 .window {
-  background: black;
+  background: gray;
   position: absolute;
   border: 0px solid purple;
   top: 100px;
   left: 20px;
   height: 200px;
   width: 500px;
+}
+.window.focused {
+  background: black;
 }
 
 h1 {

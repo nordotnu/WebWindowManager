@@ -10,10 +10,6 @@ export default class WMWindow {
   }
 
   constructor (title, width, height, scaleble, contents, exitCallback, task) {
-    this.windowElement = this.createWindow(title, width, height, scaleble, contents, exitCallback, task)
-  }
-
-  createWindow (title, width, height, scaleble, contents, exitCallback, task) {
     this.task = task
     this.savedPosition.width = width + 'px'
     this.savedPosition.height = height + 'px'
@@ -40,7 +36,7 @@ export default class WMWindow {
     const minimizeButton = document.createElement('button')
     minimizeButton.classList.add('minimize')
     minimizeButton.innerText = '_'
-    minimizeButton.addEventListener('click', (e) => this.toggleMinimize(this))
+    minimizeButton.addEventListener('click', (e) => this.toggleMinimize(this, false))
     controlsElement.appendChild(minimizeButton)
 
     // Add scaler element
@@ -56,7 +52,7 @@ export default class WMWindow {
       resizer.classList.add('scaler')
       resizer.addEventListener('dragstart', (event) => {
         if (!this.savedPosition.fullscreen) { event.target.classList.add('scalling') }
-        this.clickHandler(event)
+        this.clickHandler(this)
       })
       resizer.addEventListener('dragend', (event) => {
         event.target.classList.remove('scalling')
@@ -73,27 +69,31 @@ export default class WMWindow {
 
     // Listen to the events
     bar.addEventListener('dragstart', (e) => this.dragStartHandler(e, this))
-    bar.addEventListener('dragend', this.dragEndHandler)
-    windowElement.addEventListener('click', this.clickHandler)
+    bar.addEventListener('dragend', () => this.dragEndHandler(this))
+    windowElement.addEventListener('click', (e) => this.clickHandler(this))
 
-    const observer = new MutationObserver((mutation, observer) => this.onChangeHandler(mutation, observer, this))
+    const observer = new MutationObserver(() => {
+      return this.onChangeHandler(this)
+    })
     observer.observe(windowElement, { attributes: true })
 
-    return windowElement
+    this.windowElement = windowElement
   }
 
   /**
    * The event handler for the dragstart event.
    * @param {Event} event The event object.
-   * @param {WMWindow} obj The window object.
+   * @param {WMWindow} wmWindow The window object.
    */
-  dragStartHandler (event, obj) {
-    if (obj.savedPosition.fullscreen) {
-      console.log(obj.savedPosition.width)
-      obj.savedPosition.top = '0px'
-      obj.savedPosition.left = event.clientX - (parseInt(obj.savedPosition.width) / 2) + 'px'
-      console.log(obj.savedPosition.left)
-      obj.fullscreenHandler(event, obj)
+  dragStartHandler (event, wmWindow) {
+    if (wmWindow.savedPosition.fullscreen) {
+      console.log(wmWindow.savedPosition.width)
+      wmWindow.savedPosition.top = '0px'
+      wmWindow.savedPosition.left = event.clientX - (parseInt(wmWindow.savedPosition.width) / 2) + 'px'
+      console.log(wmWindow.savedPosition.left)
+      wmWindow.fullscreenHandler(event, wmWindow)
+    } else {
+      wmWindow.focusWindow(wmWindow.windowElement)
     }
     const style = window.getComputedStyle(event.target.parentNode, null)
     event.target.parentNode.classList.add('dragging')
@@ -107,23 +107,20 @@ export default class WMWindow {
 
   /**
    * Handles the end of a drag event
-   * @param {Event} event The event object.
+   * @param {WMWindow} wmWindow The window object.
    */
-  dragEndHandler (event) {
-    event.target.parentNode.classList.remove('dragging')
+  dragEndHandler (wmWindow) {
+    wmWindow.windowElement.classList.remove('dragging')
+    this.focusWindow(wmWindow.windowElement)
   }
 
   /**
    * Handles a click to the window bar
-   * @param {Event} event The event object.
+   * @param {WMWindow} wmWindow The window object.
    */
-  clickHandler (event) {
-    const target = event.target.closest('.window')
-
-    // Move the dragged window to the bottom of the dom tree
-    while (target.nextElementSibling != null) {
-      target.parentNode.insertBefore(target.nextElementSibling, target)
-    }
+  clickHandler (wmWindow) {
+    const element = wmWindow.windowElement
+    wmWindow.focusWindow(element)
   }
 
   /**
@@ -148,33 +145,44 @@ export default class WMWindow {
       obj.positionMapper(obj.savedPosition, target.style)
       resizer.classList.remove('hidden')
     }
-    while (target.nextElementSibling != null) {
-      target.parentNode.insertBefore(target.nextElementSibling, target)
+    this.focusWindow(target)
+  }
+
+  focusWindow (windowElement) {
+    windowElement.classList.add('focused')
+    while (windowElement.nextElementSibling != null) {
+      windowElement.nextElementSibling.classList.remove('focused')
+      windowElement.parentNode.insertBefore(windowElement.nextElementSibling, windowElement)
     }
   }
 
-  toggleMinimize (obj) {
-    if (obj.savedPosition.minimized) {
-      obj.windowElement.classList.remove('hidden')
-      obj.savedPosition.minimized = false
+  /**
+   * Toggle the minimization of the window
+   * with the option to focus before minimizing.
+   * @param {WMWindow} wmWindow The window object.
+   * @param {boolean} focus Whether to focus the window before minimizing it.
+   */
+  toggleMinimize (wmWindow, focus) {
+    if (wmWindow.savedPosition.minimized) {
+      wmWindow.focusWindow(wmWindow.windowElement)
+      wmWindow.windowElement.classList.remove('hidden')
+      wmWindow.savedPosition.minimized = false
+    } else if (focus && !wmWindow.windowElement.classList.contains('focused')) {
+      wmWindow.focusWindow(wmWindow.windowElement)
     } else {
-      obj.windowElement.classList.add('hidden')
-      obj.savedPosition.minimized = true
+      wmWindow.windowElement.classList.add('hidden')
+      wmWindow.savedPosition.minimized = true
     }
   }
 
   /**
    * Handles resize or moving of a window.
-   * @param {Array<HTMLElement>} mutationsList List of mutated elements
-   * @param {MutationObserver} observer The observer object
-   * @param {WMWindow} obj The window object
+   * @param {WMWindow} wmWindow The window object
    */
-  onChangeHandler (mutationsList, observer, obj) {
-    for (const mutation of mutationsList) {
-      const target = mutation.target
-      if (target.classList.contains('window') && obj.fullscreen) {
-        obj.positionMapper(target.style, obj.savedPosition)
-      }
+  onChangeHandler (wmWindow) {
+    const target = wmWindow.windowElement
+    if (wmWindow.fullscreen) {
+      wmWindow.positionMapper(target.style, wmWindow.savedPosition)
     }
   }
 
