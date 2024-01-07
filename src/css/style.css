@@ -1,73 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700&display=swap');
+
+body {
+  --main-bg-color: #1e1e1e;
+  --uf-bg-color: #222222;
+  --uf-border-color: #ffffff1c;
+  --border-color: #ffffff0f;
+  --bar-bg-color: #181818;
+  --uf-bar-title: #b4b4b4;
+  --uf-control-bg: #b3b3b3;
+  --bar-title: #ebebeb;
+  --hv-exit-button: #ff2e2e;
+  --hv-minimize-button: #3fdc2a;
+  --hv-fullscreen-button: #ffd606;
+  --fullscreen-button: #f9e31b;
+  --minimize-button: #7cf26c;
+  --exit-button: #ee6565;
+  --task-border: #ffffff37;
+  --sel-task-border: #6df5ff;
+  --hv-task-bg-color: #555555;
+  --taskbar-color: #1919198a;
+  --font-sans-serif: 'Work Sans', sans-serif;
+
+  overflow: hidden;
+}
+
 * {
   padding: 0;
   margin: 0;
 }
 
+
 .desktop {
   width: 100%;
   height: 100vh;
+  background-image: url('../img/bg.png');
+  background-position: center;
+  /* Center the image */
+  background-repeat: no-repeat;
+  /* Do not repeat the image */
+  background-size: cover;
 }
 
+/* WINDOW STYLE */
 .window {
-  background: gray;
+  background: var(--uf-bg-color);
   position: absolute;
-  border: 0px solid purple;
+  border: 1px solid var(--uf-border-color);
+  border-radius: 6px;
   top: 100px;
   left: 20px;
   height: 200px;
   width: 500px;
 }
+
+.window:hover {
+  border-color: var(--border-color);
+}
+
 .window.focused {
-  background: black;
+  box-shadow: 2px 2px 1px 1px #0000006c;
+  background: var(--main-bg-color);
+  border-color: var(--border-color);
 }
 
-h1 {
-  color: aliceblue;
-}
+/* END WINDOW STYLE */
 
-.bar {
+
+/* BAR STYLE*/
+.window .bar {
+  padding-inline: 8px;
+  padding-block: 8px;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: red;
-  cursor: move;
+  background-color: var(--uf-bg-color);
+  cursor: default;
 }
+
+.window .bar h3 {
+  font-family: var(--font-sans-serif);
+  font-weight: 200;
+  font-size: small;
+  color: var(--uf-bar-title);
+}
+
+.window.focused .bar h3 {
+  color: var(--bar-title);
+}
+
+.window.focused .bar {
+  background-color: var(--bar-bg-color);
+}
+
+.window .bar .controls {
+  display: flex;
+  align-items: end;
+  justify-content: space-around;
+  width: 48px;
+  height: 12px;
+}
+
+.window .bar .controls button {
+  background-color: var(--uf-control-bg);
+  border-style: solid;
+  border-color: #ffffff2b;
+  border-width: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+}
+
+.window.focused .controls button.exit {
+  background-color: var(--exit-button);
+}
+
+.window.focused .bar .controls button.fullscreen {
+  background-color: var(--fullscreen-button);
+}
+
+.window.focused .bar .controls button.minimize {
+  background-color: var(--minimize-button);
+}
+
+.window .bar button.exit:hover {
+  background-color: var(--hv-exit-button);
+}
+
+.window .bar .controls button.fullscreen:hover {
+  background-color: var(--hv-fullscreen-button);
+}
+
+.window .bar .controls button.minimize:hover {
+  background-color: var(--hv-minimize-button);
+}
+
+
+/* END BAR STYLE */
+
+/* SCALER STYLE */
 
 .scaler {
   position: absolute;
+  width: 14px;
+  height: 14px;
+  border-bottom-right-radius: 6px;
   bottom: 0;
   right: 0;
-  background: red;
   cursor: se-resize;
+  background-image: url("../img/rb-arrow.svg");
 }
 
+/* END SCALER STYLE */
 .noselect {
   user-select: none;
 }
+
+/* TASKBAR STYLE */
 .taskbar {
   position: absolute;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #000;
+  background: var(--taskbar-color);
   bottom: 0;
   right: 0;
   width: 100%;
   z-index: 999;
 }
+
 .tasks {
   display: flex;
-  padding-block: 8px;
-}
-.task {
-  margin-inline: 8px;
-  width: 36px;
-  height: 36px;
-}
-.clock {
-  padding-right: 10px;
+  justify-content: center;
+  align-items: center;
 }
 
+.task {
+  display: flex;
+  justify-content: center;
+  margin-inline: 2px;
+  width: 36px;
+  height: 36px;
+  border-bottom: 4px solid var(--task-border);
+
+}
+
+.task:hover {
+  background-color: var(--hv-task-bg-color);
+}
+
+.task.selected {
+  border-bottom-color: var(--sel-task-border);
+}
+
+.task img {
+  width: 32px;
+  height: 32px;
+}
+
+.clock {
+  padding-right: 10px;
+  color: var(--bar-title);
+  width: 75px;
+  font-weight: 200;
+  font-size: 11pt;
+  font-family: var(--font-sans-serif);
+}
+
+/* END TASKBAR STYLE */
 * .hidden {
   display: none;
 }

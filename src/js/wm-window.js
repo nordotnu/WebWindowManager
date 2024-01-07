@@ -35,7 +35,6 @@ export default class WMWindow {
 
     const minimizeButton = document.createElement('button')
     minimizeButton.classList.add('minimize')
-    minimizeButton.innerText = '_'
     minimizeButton.addEventListener('click', (e) => this.toggleMinimize(this, false))
     controlsElement.appendChild(minimizeButton)
 
@@ -43,11 +42,9 @@ export default class WMWindow {
     if (scaleble) {
       const fullScreenButton = document.createElement('button')
       fullScreenButton.classList.add('fullscreen')
-      fullScreenButton.innerText = '='
       fullScreenButton.addEventListener('click', (e) => this.fullscreenHandler(e, this))
       controlsElement.appendChild(fullScreenButton)
-      const resizer = document.createElement('button')
-      resizer.innerText = '>'
+      const resizer = document.createElement('div')
       resizer.draggable = true
       resizer.classList.add('scaler')
       resizer.addEventListener('dragstart', (event) => {
@@ -62,7 +59,6 @@ export default class WMWindow {
 
     const exitButton = document.createElement('button')
     exitButton.classList.add('exit')
-    exitButton.innerText = 'X'
     exitButton.addEventListener('click', (e) => exitCallback(this))
     controlsElement.appendChild(exitButton)
     bar.appendChild(controlsElement)
@@ -93,7 +89,7 @@ export default class WMWindow {
       console.log(wmWindow.savedPosition.left)
       wmWindow.fullscreenHandler(event, wmWindow)
     } else {
-      wmWindow.focusWindow(wmWindow.windowElement)
+      wmWindow.focusWindow(wmWindow)
     }
     const style = window.getComputedStyle(event.target.parentNode, null)
     event.target.parentNode.classList.add('dragging')
@@ -111,7 +107,7 @@ export default class WMWindow {
    */
   dragEndHandler (wmWindow) {
     wmWindow.windowElement.classList.remove('dragging')
-    this.focusWindow(wmWindow.windowElement)
+    this.focusWindow(wmWindow)
   }
 
   /**
@@ -119,8 +115,7 @@ export default class WMWindow {
    * @param {WMWindow} wmWindow The window object.
    */
   clickHandler (wmWindow) {
-    const element = wmWindow.windowElement
-    wmWindow.focusWindow(element)
+    wmWindow.focusWindow(wmWindow)
   }
 
   /**
@@ -145,15 +140,28 @@ export default class WMWindow {
       obj.positionMapper(obj.savedPosition, target.style)
       resizer.classList.remove('hidden')
     }
-    this.focusWindow(target)
+    this.focusWindow(obj)
   }
 
-  focusWindow (windowElement) {
-    windowElement.classList.add('focused')
+  /**
+   * Focuses a window and adds selected class to corresponding task.
+   * @param {WMWindow} wmWindow The window object to focus.
+   */
+  focusWindow (wmWindow) {
+    const windowElement = wmWindow.windowElement
+    const taskElement = wmWindow.task
+    const tasks = document.querySelectorAll('.task')
+
+    // Move the window to the bottom of the DOM Tree.
     while (windowElement.nextElementSibling != null) {
       windowElement.nextElementSibling.classList.remove('focused')
       windowElement.parentNode.insertBefore(windowElement.nextElementSibling, windowElement)
     }
+    tasks.forEach((task) => {
+      task.classList.remove('selected')
+    })
+    taskElement.classList.add('selected')
+    windowElement.classList.add('focused')
   }
 
   /**
@@ -164,11 +172,11 @@ export default class WMWindow {
    */
   toggleMinimize (wmWindow, focus) {
     if (wmWindow.savedPosition.minimized) {
-      wmWindow.focusWindow(wmWindow.windowElement)
+      wmWindow.focusWindow(wmWindow)
       wmWindow.windowElement.classList.remove('hidden')
       wmWindow.savedPosition.minimized = false
     } else if (focus && !wmWindow.windowElement.classList.contains('focused')) {
-      wmWindow.focusWindow(wmWindow.windowElement)
+      wmWindow.focusWindow(wmWindow)
     } else {
       wmWindow.windowElement.classList.add('hidden')
       wmWindow.savedPosition.minimized = true

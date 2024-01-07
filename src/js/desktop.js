@@ -21,7 +21,7 @@ export default class Desktop {
     contents.innerText = 'HEHE'
     const wmWindow = new WMWindow(windowContent, 500, 300, true, contents,
       (wmWindow) => this.exitHandler(wmWindow, this))
-    wmWindow.task = this.taskbar.addTask(windowContent, (e) => {
+    wmWindow.task = this.taskbar.addTask(windowContent, '../img/favicon.svg', (e) => {
       wmWindow.toggleMinimize(wmWindow, true)
     })
     this.windows.push(wmWindow)
@@ -45,7 +45,8 @@ export default class Desktop {
    */
   dropHandler (event) {
     const target = document.querySelector('.dragging')
-    if (target != null) {
+    // Prevent placing the window behind the taskbar
+    if (target != null && !event.target.classList.contains('taskbar')) {
       const offset = event.dataTransfer.getData('text/plain').split(',')
 
       target.style.left = (event.clientX + parseInt(offset[0])) + 'px'
