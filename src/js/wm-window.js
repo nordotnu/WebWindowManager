@@ -9,10 +9,12 @@ export default class WMWindow {
     minimized: false
   }
 
-  constructor (title, width, height, scaleble, contents, exitCallback, task) {
+  constructor (title, width, height, top, left, scaleble, exitCallback, task) {
     this.task = task
     this.savedPosition.width = width + 'px'
     this.savedPosition.height = height + 'px'
+    this.savedPosition.top = top + 'px'
+    this.savedPosition.left = left + 'px'
     // Create the bar
     const bar = document.createElement('div')
     bar.classList.add('bar')
@@ -27,7 +29,6 @@ export default class WMWindow {
     windowElement.classList.add('window')
     this.positionMapper(this.savedPosition, windowElement.style)
     windowElement.appendChild(bar)
-    windowElement.appendChild(contents)
 
     // Create controls
     const controlsElement = document.createElement('div')
@@ -35,20 +36,24 @@ export default class WMWindow {
 
     const minimizeButton = document.createElement('button')
     minimizeButton.classList.add('minimize')
-    minimizeButton.addEventListener('click', (e) => this.toggleMinimize(this, false))
+    minimizeButton.addEventListener('click',
+      (e) => this.toggleMinimize(this, false))
     controlsElement.appendChild(minimizeButton)
 
     // Add scaler element
     if (scaleble) {
       const fullScreenButton = document.createElement('button')
       fullScreenButton.classList.add('fullscreen')
-      fullScreenButton.addEventListener('click', (e) => this.fullscreenHandler(e, this))
+      fullScreenButton.addEventListener('click',
+        () => this.fullscreenHandler(this))
       controlsElement.appendChild(fullScreenButton)
       const resizer = document.createElement('div')
       resizer.draggable = true
       resizer.classList.add('scaler')
       resizer.addEventListener('dragstart', (event) => {
-        if (!this.savedPosition.fullscreen) { event.target.classList.add('scalling') }
+        if (!this.savedPosition.fullscreen) {
+          event.target.classList.add('scalling')
+        }
         this.clickHandler(this)
       })
       resizer.addEventListener('dragend', (event) => {
@@ -77,17 +82,24 @@ export default class WMWindow {
   }
 
   /**
+   * Sets the body of the window.
+   * @param {HTMLElement} content The body of the window
+   */
+  appendContent (content) {
+    this.windowElement.appendChild(content)
+  }
+
+  /**
    * The event handler for the dragstart event.
    * @param {Event} event The event object.
    * @param {WMWindow} wmWindow The window object.
    */
   dragStartHandler (event, wmWindow) {
     if (wmWindow.savedPosition.fullscreen) {
-      console.log(wmWindow.savedPosition.width)
       wmWindow.savedPosition.top = '0px'
-      wmWindow.savedPosition.left = event.clientX - (parseInt(wmWindow.savedPosition.width) / 2) + 'px'
-      console.log(wmWindow.savedPosition.left)
-      wmWindow.fullscreenHandler(event, wmWindow)
+      wmWindow.savedPosition.left = event.clientX -
+      (parseInt(wmWindow.savedPosition.width) / 2) + 'px'
+      wmWindow.fullscreenHandler(wmWindow)
     } else {
       wmWindow.focusWindow(wmWindow)
     }
@@ -98,7 +110,8 @@ export default class WMWindow {
       (parseInt(style.getPropertyValue('left')) - event.clientX) +
        ',' + (parseInt(style.getPropertyValue('top')) - event.clientY)
     )
-    event.dataTransfer.setDragImage(event.target.parentNode, event.layerX, event.layerY)
+    event.dataTransfer.setDragImage(event.target.parentNode,
+      event.layerX, event.layerY)
   }
 
   /**
@@ -121,26 +134,34 @@ export default class WMWindow {
   /**
    * Handles the fullscreen button
    * @param {Event} event The event object
-   * @param {WMWindow} obj the window object
+   * @param {WMWindow} wmWindow the window object
    */
-  fullscreenHandler (event, obj) {
-    const target = obj.windowElement
-    console.log(target)
+  fullscreenHandler (wmWindow) {
+    const target = wmWindow.windowElement
     const resizer = target.getElementsByClassName('scaler')[0]
-    if (!obj.savedPosition.fullscreen) {
-      obj.savedPosition.fullscreen = true
-      obj.positionMapper(target.style, obj.savedPosition)
+    if (!wmWindow.savedPosition.fullscreen) {
+      wmWindow.savedPosition.fullscreen = true
+      wmWindow.positionMapper(target.style, wmWindow.savedPosition)
       target.style.width = window.innerWidth + 'px'
       target.style.height = window.innerHeight + 'px'
       target.style.top = 0
       target.style.left = 0
       resizer.classList.add('hidden')
     } else {
-      obj.savedPosition.fullscreen = false
-      obj.positionMapper(obj.savedPosition, target.style)
+      wmWindow.savedPosition.fullscreen = false
+      wmWindow.positionMapper(wmWindow.savedPosition, target.style)
       resizer.classList.remove('hidden')
     }
-    this.focusWindow(obj)
+    this.focusWindow(wmWindow)
+  }
+
+  resizeWindow (width, height) {
+    this.savedPosition.width = width
+    this.savedPosition.height = height
+
+    const target = this.windowElement
+    target.style.width = width + 'px'
+    target.style.height = height + 'px'
   }
 
   /**
@@ -155,7 +176,8 @@ export default class WMWindow {
     // Move the window to the bottom of the DOM Tree.
     while (windowElement.nextElementSibling != null) {
       windowElement.nextElementSibling.classList.remove('focused')
-      windowElement.parentNode.insertBefore(windowElement.nextElementSibling, windowElement)
+      windowElement.parentNode.insertBefore(
+        windowElement.nextElementSibling, windowElement)
     }
     tasks.forEach((task) => {
       task.classList.remove('selected')

@@ -1,7 +1,13 @@
 import TaskBar from './taskbar'
 import WMWindow from './wm-window'
+import Application from './application'
 export default class Desktop {
-  windows = []
+  runningApps = []
+  nextPosition = {
+    top: 10,
+    left: 10
+  }
+
   constructor () {
     this.desktop = document.querySelector('.desktop')
     this.taskbar = new TaskBar()
@@ -10,31 +16,79 @@ export default class Desktop {
     })
     this.desktop.addEventListener('dragover', this.scalerHandler)
     this.desktop.addEventListener('drop', this.dropHandler)
+
+    // This is an cooler effect but a bit heavy for development
+    // this.desktop.addEventListener('dragover', this.dropHandler)
   }
 
   /**
-   * Opens a window in the desktop.
-   * @param {HTMLElement} windowContent The contents of the window
+   * Opens a application in the desktop.
+   * @param {object} Application The class of the application
    */
-  addWindow (windowContent) {
-    const contents = document.createElement('h2')
-    contents.innerText = 'HEHE'
-    const wmWindow = new WMWindow(windowContent, 500, 300, true, contents,
-      (wmWindow) => this.exitHandler(wmWindow, this))
-    wmWindow.task = this.taskbar.addTask(windowContent, '../img/favicon.svg', (e) => {
+  openApp (Application) {
+    this.incrementNextPosition()
+    let app
+    const wmWindow = new WMWindow(Application.appName,
+      Application.width, Application.height,
+      this.nextPosition.top, this.nextPosition.left,
+      Application.scaleble,
+      (wmWindow, app) => this.exitHandler(wmWindow, app, this))
+
+    // Create an instance of application
+    // eslint-disable-next-line prefer-const
+    app = new Application(wmWindow)
+    const content = app.getApplicationElement()
+    wmWindow.appendContent(content)
+
+    wmWindow.task = this.taskbar.addTask(Application.appName, Application.icon, (e) => {
       wmWindow.toggleMinimize(wmWindow, true)
     })
-    this.windows.push(wmWindow)
+    this.runningApps.push(app)
     this.desktop.appendChild(wmWindow.windowElement)
+  }
+
+  registerApp (Application) {
+    // Create an icon
+    const template = document.querySelector('#icon')
+    const icon = template.content.cloneNode(true)
+    icon.querySelector('img').setAttribute('src', Application.icon)
+    icon.querySelector('p').innerText = Application.appName
+    icon.children[0].addEventListener('click', () => {
+      this.openApp(Application)
+    })
+    const iconsGrid = this.desktop.querySelector('.icons-grid')
+    iconsGrid.appendChild(icon)
+
+    // TESTING
+    this.openApp(Application)
+  }
+
+  /**
+   * Increments the next position of the window.
+   */
+  incrementNextPosition () {
+    if (this.nextPosition.top < 200) {
+      this.nextPosition.top += 30
+      this.nextPosition.left += 30
+    }
+    if (this.nextPosition.top > 200) {
+      this.nextPosition.top = 30
+      this.nextPosition.left += 100
+      if (this.nextPosition.left > window.innerWidth) {
+        this.nextPosition.top = 30
+        this.nextPosition.left = 30
+      }
+    }
   }
 
   /**
    * Handles the exiting of a window.
    * @param {WMWindow} wmWindow The window object.
+   * @param {Application} app the app object.
    * @param {Desktop} desktop the desktop object.
    */
-  exitHandler (wmWindow, desktop) {
-    desktop.windows.pop(wmWindow)
+  exitHandler (wmWindow, app, desktop) {
+    desktop.runningApps.pop(app)
     desktop.taskbar.removeTask(wmWindow.task)
     wmWindow.windowElement.remove()
   }

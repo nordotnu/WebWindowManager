@@ -1,0 +1,68 @@
+.memory-game {
+  --font-sans-serif: 'Work Sans', sans-serif;
+  --black: #1e1e1e;
+  --white: #ebebeb;
+  --gray: #262626;
+  --red: #ff2e2e;
+  --green: #3fdc2a;
+  --yellow: #ffd606;
+
+  
+  
+  --uf-bg-color: #222222;
+  --uf-border-color: #ffffff1c;
+  --bar-bg-color: #181818;
+  --uf-bar-title: #b4b4b4;
+  --uf-control-bg: #b3b3b3;
+  --fullscreen-button: #f9e31b;
+  --minimize-button: #7cf26c;
+  --exit-button: #ee6565;
+  --task-border: #ffffff37;
+  --sel-task-border: #6df5ff;
+  --hv-task-bg-color: #555555;
+  --taskbar-color: #1919198a;
+  * {
+    font-family: var(--font-sans-serif);
+    color: var(--white);
+    overflow:hidden;
+    
+  }
+  #game-logo {
+    width: 80%;
+    padding: 10%;
+  }
+  .options {
+    
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 5px;
+  }
+  .option-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 70%;
+    background-color: var(--gray);
+    border-radius: 10px;
+    margin-block: 12px;
+    padding: 12px;
+    margin: 4px;
+    border: 1px solid var(--black);
+  }
+  .option-button.easy:hover {
+    border: 1px solid var(--green);
+  }
+
+  .option-button.normal:hover {
+    border: 1px solid var(--yellow);
+  }
+  .option-button.advanced:hover {
+    border: 1px solid var(--red);
+  }
+  .option-button:hover {
+    background-color: var(--black);
+    cursor: pointer;
+  }
+}

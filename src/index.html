@@ -1,17 +1,20 @@
 <!doctype html>
 <html lang="en">
-
+  
 <head>
   <meta charset="utf-8">
   <title>Spa</title>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/memory.css">
   <link rel="icon" href="img/favicon.svg">
 </head>
 
 <body>
 
   <div class="desktop">
-    <button class="maximize">max</button>
+    <div class="icons-grid">
+
+    </div>
     <div class="taskbar">
       <div class="tasks">
       </div>
@@ -19,6 +22,42 @@
     </div>
   </div>
 
+
+  <!--Default Application Template-->
+  <template id="my-app">
+    <div id="app-body">
+    </div>
+  </template>
+
+  <!--Memory Game Template-->
+  <template id="memory-game">
+    <div id="app-body" class="memory-game">
+      <img id="game-logo" src="../img/memory.png">
+      <div class="options noselect">
+        <h3>Choose a difficulty:</h3>
+        <div class="option-button easy">
+          <h4>Easy</h4>
+          <p>2x2</p>
+        </div>
+        <div class="option-button normal">
+          <h4>Normal</h4>
+          <p>2x4</p>
+        </div>
+        <div class="option-button advanced">
+          <h4>Advanced</h4>
+          <p>4x4</p>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!--Desktop Icon Template-->
+  <template id="icon">
+    <div class="icon-body">
+      <img>
+      <p></p>
+    </div>
+  </template>
   <script type="module" src="js/app.js"></script>
 </body>
 

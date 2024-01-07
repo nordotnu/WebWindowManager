@@ -21,10 +21,10 @@ body {
   --taskbar-color: #1919198a;
   --font-sans-serif: 'Work Sans', sans-serif;
 
-  overflow: hidden;
 }
 
 * {
+  overflow: hidden;
   padding: 0;
   margin: 0;
 }
@@ -35,9 +35,7 @@ body {
   height: 100vh;
   background-image: url('../img/bg.png');
   background-position: center;
-  /* Center the image */
   background-repeat: no-repeat;
-  /* Do not repeat the image */
   background-size: cover;
 }
 
@@ -51,6 +49,9 @@ body {
   left: 20px;
   height: 200px;
   width: 500px;
+}
+.window * {
+ overflow:scroll;
 }
 
 .window:hover {
@@ -168,9 +169,11 @@ body {
   right: 0;
   width: 100%;
   z-index: 999;
+  height: 40px;
 }
 
 .tasks {
+  overflow:scroll;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -180,7 +183,7 @@ body {
   display: flex;
   justify-content: center;
   margin-inline: 2px;
-  width: 36px;
+  min-width: 36px;
   height: 36px;
   border-bottom: 4px solid var(--task-border);
 
@@ -209,6 +212,39 @@ body {
 }
 
 /* END TASKBAR STYLE */
+
+/* ICONS GRID STYLE */
+.icons-grid {
+  display: grid;
+}
+.icon-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 84px;
+  height: 84px;
+  margin: 4px;
+  box-sizing: border-box;
+}
+.icon-body:hover {
+  background-color: var(--task-border);
+  border: 1px solid var(--uf-border-color);
+  border-radius: 6px;
+}
+.icon-body img {
+  width: 48px;
+  height: 48px;
+}
+.icon-body p {
+ font-family: var(--font-sans-serif);
+ font-size: small;
+ text-align: center;
+ color: var(--bar-title);
+}
+/* END ICONS GRID STYLE */
+
+
 * .hidden {
   display: none;
 }
