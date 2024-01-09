@@ -12,18 +12,6 @@
   --modal-bg:linear-gradient(180deg, rgba(8,6,6,0) 0%, rgba(8,6,6,0.9) 10%, rgba(8,6,6,0.9) 86%, rgba(0,0,0,0) 100%);  
 
 
-
-  --uf-bg-color: #222222;
-  --uf-border-color: #ffffff1c;
-  --bar-bg-color: #181818;
-  --fullscreen-button: #f9e31b;
-  --minimize-button: #7cf26c;
-  --exit-button: #ee6565;
-  --task-border: #ffffff37;
-  --sel-task-border: #6df5ff;
-  --hv-task-bg-color: #555555;
-  --taskbar-color: #1919198a;
-
   * {
     font-family: var(--font-sans-serif);
     color: var(--white);

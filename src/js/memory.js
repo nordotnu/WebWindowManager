@@ -1,8 +1,8 @@
 import Application from './application'
 
-const cardsPath = '../img/cards/'
+const CARDS_PATH = '../img/cards/'
 const MAX_TIME = 60
-const imgsList = [
+const IMG_LIST = [
   'among-us.svg',
   'bioshock-infinite.svg',
   'call-of-duty.svg',
@@ -30,7 +30,7 @@ export default class Memory extends Application {
   static icon = '../img/memory.svg'
   static width = 400
   static height = 500
-  static scaleble = true
+  static scaleble = false
 
   timeLeft = MAX_TIME
   opened = 0
@@ -38,6 +38,10 @@ export default class Memory extends Application {
   won = false
   gameEnded = false
 
+  /**
+   * Gets the HTML Element of the application
+   * @returns {HTMLElement} App element
+   */
   getApplicationElement () {
     this.appBody = super.getApplicationElement()
     const options = this.appBody.children[0].querySelectorAll('.option')
@@ -47,12 +51,16 @@ export default class Memory extends Application {
     return this.appBody
   }
 
+  /**
+   * Handles starting the game
+   * @param {Event} e The event object
+   * @param {Memory} memory The memory object
+   */
   startGameCallback (e, memory) {
     const button = e.target.closest('.option')
     let difficulty = button.classList[1]
     const element = e.target.closest('.memory-game')
 
-    
     // Hide start page
     element.querySelector('.start-menu').classList.add('hidden')
     const gamePage = element.querySelector('.game-page')
@@ -67,9 +75,9 @@ export default class Memory extends Application {
       difficulty = 16
       this.wmWindow.resizeWindow(550, 600)
     }
-    
+
     memory.difficulty = difficulty
-    
+
     const cardsGrid = element.querySelector('.cards')
     cardsGrid.className = 'cards'
     cardsGrid.className += ' c' + memory.difficulty
@@ -82,15 +90,19 @@ export default class Memory extends Application {
     memory.cardsList = []
     paths.forEach((path) => {
       const card = emptyCard.cloneNode(true)
-      card.querySelector('.back-img').setAttribute('src', cardsPath + path)
+      card.querySelector('.back-img').setAttribute('src', CARDS_PATH + path)
       card.addEventListener('click', (e) => memory.flip(e))
       cardsGrid.appendChild(card)
     })
     memory.timeElement = memory.wmWindow.windowElement.querySelector('.time-left')
-    console.log(memory.timeElement);
     memory.decreaseTime()
   }
-  
+
+  /**
+   * Shuffles an array
+   * @param {Array} array The array to shuffle
+   * @returns {Array} Shuffled array
+   */
   shuffleArray (array) {
     const shuffledArray = [...array]
     for (let i = shuffledArray.length - 1; i > 0; i--) {
@@ -100,8 +112,12 @@ export default class Memory extends Application {
     return shuffledArray
   }
 
+  /**
+   * Create random cards based on the difficulty
+   * @returns {Array} Array with random images
+   */
   createCardImages () {
-    const randomPaths = this.shuffleArray(imgsList)
+    const randomPaths = this.shuffleArray(IMG_LIST)
     let paths = randomPaths.slice(0, this.difficulty / 2)
     paths.push(...paths)
     paths = this.shuffleArray(paths)
@@ -109,6 +125,10 @@ export default class Memory extends Application {
     return paths
   }
 
+  /**
+   * Click handler for flipping a card
+   * @param {Event} e The event object
+   */
   flip (e) {
     const card = e.target.closest('.card')
     const front = card.querySelector('.front-img')
@@ -142,6 +162,9 @@ export default class Memory extends Application {
     }, 500)
   }
 
+  /**
+   * Handles the ending of the game
+   */
   gameOver () {
     const gamePage = this.wmWindow.windowElement.querySelector('.game-page')
     const modal = document.createElement('div')
@@ -166,6 +189,10 @@ export default class Memory extends Application {
     gamePage.appendChild(modal)
   }
 
+  /**
+   * Callback for the try again button
+   * @param {Event} e The Event object.
+   */
   tryAgainCallback (e) {
     const modal = e.target.closest('.modal')
     const gamePage = e.target.closest('.game-page')
@@ -180,9 +207,11 @@ export default class Memory extends Application {
     this.gameEnded = false
     const obj = Object.getPrototypeOf(this).constructor
     this.wmWindow.resizeWindow(obj.width, obj.height)
-    console.log(this.won)
   }
 
+  /**
+   * Decreases the time left
+   */
   decreaseTime () {
     if (this.gameEnded || this.won) return
     this.timeElement.innerText = this.timeLeft

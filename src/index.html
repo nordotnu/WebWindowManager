@@ -6,6 +6,7 @@
   <title>Spa</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/memory.css">
+  <link rel="stylesheet" href="css/chat.css">
   <link rel="icon" href="img/favicon.svg">
 </head>
 
@@ -65,6 +66,31 @@
           
 
         </div>
+      </div>
+    </div>
+  </template>
+
+  <!--Chat App Template-->
+  <template id="chat-app">
+    <div class="chat-app">
+      <div class="settings">
+        <div class="setting">
+          <p>Username:</p>
+          <input class="username" type="text" disabled value="Anon">
+          <div class="username-edit"></div>
+        </div>
+        <div class="setting">
+          <p>Channel:</p>
+          <input class="channel" type="text" value="Main">
+          <div class="channel-edit active"></div>
+        </div>
+      </div>
+      <div class="messages">s</div>
+      <div class="input">
+        <textarea></textarea>
+        <div class="send-btn">
+        <img src="img/send.svg">
+      </div>
       </div>
     </div>
   </template>
