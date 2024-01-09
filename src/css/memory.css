@@ -6,14 +6,15 @@
   --red: #ff2e2e;
   --green: #3fdc2a;
   --yellow: #ffd606;
+  --card-bg: #b4b4b4;
+  --f-card-bg: #ebebeb;
+  --game-bg: #b3b3b3;
 
-  
-  
+
+
   --uf-bg-color: #222222;
   --uf-border-color: #ffffff1c;
   --bar-bg-color: #181818;
-  --uf-bar-title: #b4b4b4;
-  --uf-control-bg: #b3b3b3;
   --fullscreen-button: #f9e31b;
   --minimize-button: #7cf26c;
   --exit-button: #ee6565;
@@ -21,24 +22,28 @@
   --sel-task-border: #6df5ff;
   --hv-task-bg-color: #555555;
   --taskbar-color: #1919198a;
+
   * {
     font-family: var(--font-sans-serif);
     color: var(--white);
-    overflow:hidden;
-    
+    overflow: hidden;
+
   }
+
   #game-logo {
     width: 80%;
     padding: 10%;
   }
+
   .options {
-    
+
     display: flex;
     align-items: center;
     flex-direction: column;
     margin: 5px;
   }
-  .option-button {
+
+  .option {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -51,18 +56,138 @@
     margin: 4px;
     border: 1px solid var(--black);
   }
-  .option-button.easy:hover {
+
+  .option.easy:hover {
     border: 1px solid var(--green);
   }
 
-  .option-button.normal:hover {
+  .option.normal:hover {
     border: 1px solid var(--yellow);
   }
-  .option-button.advanced:hover {
+
+  .option.advanced:hover {
     border: 1px solid var(--red);
   }
-  .option-button:hover {
+
+  .option:hover {
     background-color: var(--black);
     cursor: pointer;
+  }
+
+  /* GAME BODY STYLE */
+  .game-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--gray);
+    border: 1px solid var(--card-bg);
+    border-radius: 10px;
+    width: 90%;
+    margin-inline: 5%;
+    height: 100%;
+  }
+
+  ::backdrop {
+    background-color: red;
+  }
+
+  dialog {
+    display: block;
+    color: red;
+    width: 100%;
+    height: 90%;
+    border-style: none;
+    background: black;
+    
+  }
+  dialog::backdrop {
+    background-color: blue;
+    
+  }
+
+
+
+  /* END GAME BODY STYLE */
+
+  /* CARDS STYLE */
+
+
+  .cards {
+    display: grid;
+  }
+
+
+  .cards.c4 {
+    grid-template-rows: repeat(2, 50% [row-start]);
+    grid-template-columns: repeat(2, 50% [column-start]);
+  }
+
+  .cards.c8 {
+    grid-template-rows: repeat(2, 50% [row-start]);
+    grid-template-columns: repeat(4, 25% [column-start]);
+  }
+
+  .cards.c16 {
+    grid-template-rows: repeat(4, 25% [row-start]);
+    grid-template-columns: repeat(4, 25% [column-start]);
+  }
+
+  .card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--card-bg);
+    border: 1px solid var(--white);
+    border-radius: 10px;
+    margin: 10px;
+    transition: 0.2s;
+
+  }
+
+  .card:hover {
+    background-color: var(--f-card-bg);
+    box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.31);
+  }
+
+  .card .back-img,
+  .card .front-img {
+    width: 100px;
+    height: 100px;
+    animation: flipIn 300ms;
+
+  }
+
+  .card .front-img.flip {
+    transform: rotateY(90deg);
+  }
+
+  /* END CARDS STYLE */
+
+
+}
+
+@keyframes flipOut {
+  0% {
+    transform: rotateY(0deg);
+    opacity: 1
+  }
+
+  100% {
+
+    transform: rotateY(90deg);
+    opacity: 0;
+  }
+}
+
+@keyframes flipIn {
+  0% {
+    transform: rotateY(90deg);
+    opacity: 0;
+  }
+
+  100% {
+
+    transform: rotateY(0deg);
+    opacity: 1
   }
 }

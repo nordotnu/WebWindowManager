@@ -1,6 +1,5 @@
 import TaskBar from './taskbar'
 import WMWindow from './wm-window'
-import Application from './application'
 export default class Desktop {
   runningApps = []
   nextPosition = {
