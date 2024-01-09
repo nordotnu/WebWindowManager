@@ -1,4 +1,3 @@
-import Application from './application'
 import Desktop from './desktop'
 import Memory from './memory'
 

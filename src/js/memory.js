@@ -31,8 +31,9 @@ export default class Memory extends Application {
   static height = 500
   static scaleble = true
 
+  timeLeft = 100
   opened = 0
-  atempts = 0
+  attempts = 0
   won = false
 
   getApplicationElement () {
@@ -70,14 +71,14 @@ export default class Memory extends Application {
     cardsGrid.className = 'cards'
     cardsGrid.className += ' c' + memory.difficulty
 
-    const paths = memory.createCardImages(memory)
+    const paths = memory.createCardImages()
     const emptyCard = cardsGrid.querySelector('.card').cloneNode(true)
     cardsGrid.innerHTML = ''
     memory.cardsList = []
     paths.forEach((path) => {
       const card = emptyCard.cloneNode(true)
       card.querySelector('.back-img').setAttribute('src', cardsPath + path)
-      card.addEventListener('click', (e) => memory.flip(e, memory))
+      card.addEventListener('click', (e) => memory.flip(e))
       cardsGrid.appendChild(card)
     })
   }
@@ -91,16 +92,16 @@ export default class Memory extends Application {
     return shuffledArray
   }
 
-  createCardImages (memory) {
-    const randomPaths = memory.shuffleArray(imgsList)
-    let paths = randomPaths.slice(0, memory.difficulty / 2)
+  createCardImages () {
+    const randomPaths = this.shuffleArray(imgsList)
+    let paths = randomPaths.slice(0, this.difficulty / 2)
     paths.push(...paths)
-    paths = memory.shuffleArray(paths)
+    paths = this.shuffleArray(paths)
 
     return paths
   }
 
-  flip (e, memory) {
+  flip (e) {
     const card = e.target.closest('.card')
     const front = card.querySelector('.front-img')
     if (front.classList.contains('hidden')) return
@@ -109,13 +110,13 @@ export default class Memory extends Application {
     front.classList.add('hidden')
 
     setTimeout(() => {
-      if (memory.lastOpen == null) {
-        memory.lastOpen = card
+      if (this.lastOpen == null) {
+        this.lastOpen = card
         return
       }
-      memory.atempts += 1
-      const lastBack = memory.lastOpen.querySelector('.back-img')
-      const lastFront = memory.lastOpen.querySelector('.front-img')
+      this.attempts += 1
+      const lastBack = this.lastOpen.querySelector('.back-img')
+      const lastFront = this.lastOpen.querySelector('.front-img')
 
       const lastImg = lastBack.getAttribute('src')
       const currentImg = back.getAttribute('src')
@@ -125,10 +126,40 @@ export default class Memory extends Application {
         back.classList.add('hidden')
         front.classList.remove('hidden')
       } else {
-        memory.opened += 1
-        memory.won = memory.opened === memory.difficulty / 2
+        this.opened += 1
+        this.won = this.opened === this.difficulty / 2
+        if (this.won) this.gameOver()
       }
-      memory.lastOpen = null
+      this.lastOpen = null
     }, 500)
+  }
+
+  gameOver () {
+    const gameBody = this.wmWindow.windowElement.querySelector('.game-page')
+    const modal = document.createElement('div')
+    modal.className = 'modal'
+
+    const title = document.createElement('h1')
+    const description = document.createElement('p')
+    const tryAgain = document.createElement('div')
+    tryAgain.className = 'try-again'
+    tryAgain.innerText = 'Try Again'
+    tryAgain.addEventListener('click', () => this.tryAgainCallback())
+    if (this.won) {
+      title.innerText = 'You Won!'
+      description.innerText = `You won in ${this.timeLeft} seconds with only ${this.attempts} attempts!`
+    } else {
+      title.innerText = 'Game Over!'
+      description.innerText = 'The time is out! Good luck next time!'
+    }
+    modal.appendChild(title)
+    modal.appendChild(description)
+    modal.appendChild(tryAgain)
+    gameBody.appendChild(modal)
+  }
+
+  tryAgainCallback () {
+    console.log(this.won)
+
   }
 }
