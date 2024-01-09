@@ -1,3 +1,4 @@
+import Chat from './chat'
 import Desktop from './desktop'
 import Memory from './memory'
 
@@ -9,4 +10,5 @@ window.addEventListener('load', main)
 function main () {
   const desktop = new Desktop()
   desktop.registerApp(Memory)
+  desktop.registerApp(Chat)
 }

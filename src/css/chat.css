@@ -67,11 +67,13 @@
         background-image: url('../img/edit.svg');
         background-repeat: no-repeat;
         opacity: 0;
+        margin-left: 5px;
       }
 
       .username-edit:hover,
       .channel-edit:hover {
-        opacity: 1;
+        opacity: 0.5;
+        cursor: pointer;
       }
 
       .active {
@@ -85,6 +87,7 @@
       .username-edit,
       .channel-edit {
         opacity: 1;
+        transition: 300ms;
       }
     }
   }
