@@ -132,6 +132,20 @@
 
   /* END GAME BODY STYLE */
 
+  /* GAME HEADER STYLE */
+
+  .game-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 14px;
+    padding-block: 12px;
+  }
+  .game-header p {
+    padding-right: 12px;
+  }
+  /* END GAME HEADER STYLE */
+
   /* CARDS STYLE */
 
 

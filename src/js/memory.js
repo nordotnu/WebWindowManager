@@ -1,6 +1,7 @@
 import Application from './application'
 
 const cardsPath = '../img/cards/'
+const MAX_TIME = 60
 const imgsList = [
   'among-us.svg',
   'bioshock-infinite.svg',
@@ -31,10 +32,11 @@ export default class Memory extends Application {
   static height = 500
   static scaleble = true
 
-  timeLeft = 100
+  timeLeft = MAX_TIME
   opened = 0
   attempts = 0
   won = false
+  gameEnded = false
 
   getApplicationElement () {
     this.appBody = super.getApplicationElement()
@@ -50,6 +52,7 @@ export default class Memory extends Application {
     let difficulty = button.classList[1]
     const element = e.target.closest('.memory-game')
 
+    
     // Hide start page
     element.querySelector('.start-menu').classList.add('hidden')
     const gamePage = element.querySelector('.game-page')
@@ -64,15 +67,17 @@ export default class Memory extends Application {
       difficulty = 16
       this.wmWindow.resizeWindow(550, 600)
     }
-
+    
     memory.difficulty = difficulty
-
+    
     const cardsGrid = element.querySelector('.cards')
     cardsGrid.className = 'cards'
     cardsGrid.className += ' c' + memory.difficulty
 
     const paths = memory.createCardImages()
     const emptyCard = cardsGrid.querySelector('.card').cloneNode(true)
+    emptyCard.querySelector('.back-img').className = 'back-img hidden'
+    emptyCard.querySelector('.front-img').className = 'front-img'
     cardsGrid.innerHTML = ''
     memory.cardsList = []
     paths.forEach((path) => {
@@ -81,8 +86,11 @@ export default class Memory extends Application {
       card.addEventListener('click', (e) => memory.flip(e))
       cardsGrid.appendChild(card)
     })
+    memory.timeElement = memory.wmWindow.windowElement.querySelector('.time-left')
+    console.log(memory.timeElement);
+    memory.decreaseTime()
   }
-
+  
   shuffleArray (array) {
     const shuffledArray = [...array]
     for (let i = shuffledArray.length - 1; i > 0; i--) {
@@ -135,7 +143,7 @@ export default class Memory extends Application {
   }
 
   gameOver () {
-    const gameBody = this.wmWindow.windowElement.querySelector('.game-page')
+    const gamePage = this.wmWindow.windowElement.querySelector('.game-page')
     const modal = document.createElement('div')
     modal.className = 'modal'
 
@@ -144,10 +152,10 @@ export default class Memory extends Application {
     const tryAgain = document.createElement('div')
     tryAgain.className = 'try-again'
     tryAgain.innerText = 'Try Again'
-    tryAgain.addEventListener('click', () => this.tryAgainCallback())
+    tryAgain.addEventListener('click', (e) => this.tryAgainCallback(e))
     if (this.won) {
       title.innerText = 'You Won!'
-      description.innerText = `You won in ${this.timeLeft} seconds with only ${this.attempts} attempts!`
+      description.innerText = `You won in ${MAX_TIME - this.timeLeft} seconds with only ${this.attempts} attempts!`
     } else {
       title.innerText = 'Game Over!'
       description.innerText = 'The time is out! Good luck next time!'
@@ -155,11 +163,36 @@ export default class Memory extends Application {
     modal.appendChild(title)
     modal.appendChild(description)
     modal.appendChild(tryAgain)
-    gameBody.appendChild(modal)
+    gamePage.appendChild(modal)
   }
 
-  tryAgainCallback () {
+  tryAgainCallback (e) {
+    const modal = e.target.closest('.modal')
+    const gamePage = e.target.closest('.game-page')
+    const startMenu = this.wmWindow.windowElement.querySelector('.start-menu')
+    startMenu.classList.remove('hidden')
+    gamePage.removeChild(modal)
+    gamePage.classList.add('hidden')
+    this.timeLeft = MAX_TIME
+    this.attempts = 0
+    this.opened = 0
+    this.won = false
+    this.gameEnded = false
+    const obj = Object.getPrototypeOf(this).constructor
+    this.wmWindow.resizeWindow(obj.width, obj.height)
     console.log(this.won)
+  }
 
+  decreaseTime () {
+    if (this.gameEnded || this.won) return
+    this.timeElement.innerText = this.timeLeft
+    setTimeout(() => {
+      if (this.timeLeft === 0 && !this.won) {
+        this.gameOver()
+      } else {
+        this.timeLeft -= 1
+        this.decreaseTime()
+      }
+    }, 1000)
   }
 }
