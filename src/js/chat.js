@@ -44,24 +44,38 @@ export default class Chat extends Application {
     const textarea = this.appBody.children[0].querySelector('textarea')
     textarea.addEventListener('keydown', (e) => this.sendMessage(e))
 
+    // Load the saved messages on start
     const observer = new MutationObserver(() => {
       this.loadSavedMessages()
       observer.disconnect()
     })
     observer.observe(this.wmWindow.windowElement, { subtree: true, childList: true })
 
+    // Make sure the messages always scrolled to the bottom
+    const windowChangeObserver = new MutationObserver(() => {
+      const messages = this.wmWindow.windowElement.querySelector('.messages')
+      messages.scrollTo(0, messages.scrollHeight)
+    })
+    windowChangeObserver.observe(this.wmWindow.windowElement, { attributes: true })
+
+    // Get and set the stored username
     const storedUsername = sessionStorage.getItem('username')
     if (storedUsername !== null) {
       userInput.value = storedUsername
       this.username = storedUsername
     }
 
+    // Initilize the chat service
     this.chatService = new ChatService(this.username, this.channel, (msg) => this.receiveMessage(msg))
     this.chatService.connect()
 
     return this.appBody
   }
 
+  /**
+   * Handles the changing of the username.
+   * @param {Event} e The event object.
+   */
   editUsername (e) {
     if (e.target.className === 'username' && e.key !== 'Enter') return
     e.preventDefault()
@@ -84,6 +98,10 @@ export default class Chat extends Application {
     }
   }
 
+  /**
+   * Handles the changing of the channel.
+   * @param {Event} e The event object.
+   */
   editChannel (e) {
     if (e.target.className === 'channel' && e.key !== 'Enter') return
     e.preventDefault()
@@ -105,6 +123,10 @@ export default class Chat extends Application {
     }
   }
 
+  /**
+   * Handles Sending a message.
+   * @param {Event} e The event object.
+   */
   sendMessage (e) {
     const chatApp = this.wmWindow.windowElement.querySelector('.chat-app')
     const message = chatApp.querySelector('textarea')
@@ -117,6 +139,11 @@ export default class Chat extends Application {
     }
   }
 
+  /**
+   * Handles reciving a message.
+   * @param {Message} message The message object.
+   * @param {boolean} store Wether to store the message in the storage.
+   */
   receiveMessage (message, store = true) {
     const chatApp = this.wmWindow.windowElement.querySelector('.chat-app')
     const messages = chatApp.querySelector('.messages')
@@ -148,6 +175,10 @@ export default class Chat extends Application {
     messages.scrollTo(0, messages.scrollHeight)
   }
 
+  /**
+   * Stores a message in the session storage.
+   * @param {Message} message The message object.
+   */
   storeMessage (message) {
     const storedMessagesJson = sessionStorage.getItem('messages')
     const jsonMessage = JSON.stringify([message])
@@ -155,7 +186,6 @@ export default class Chat extends Application {
       const storedMessages = JSON.parse(storedMessagesJson)
       let exist = false
       for (let i = 0; i < storedMessages.length; i++) {
-        console.log(storedMessages[i], message)
         exist = exist || JSON.stringify(storedMessages[i]) === JSON.stringify(message)
       }
       if (!exist) {
@@ -167,8 +197,10 @@ export default class Chat extends Application {
     }
   }
 
+  /**
+   * Loads and displays the saved messages
+   */
   loadSavedMessages () {
-    console.log('loading messages')
     const storedMessages = sessionStorage.getItem('messages')
     const chatApp = this.wmWindow.windowElement.querySelector('.chat-app')
     chatApp.querySelector('.messages').innerHTML = ''
@@ -183,6 +215,10 @@ export default class Chat extends Application {
     }
   }
 
+  /**
+   * Handles the opening of the emoji menu
+   * @param {Event} e The event object.
+   */
   openEmoji (e) {
     const chatApp = this.wmWindow.windowElement.querySelector('.chat-app')
     const emojiMenu = chatApp.querySelector('.emojis')
@@ -194,6 +230,10 @@ export default class Chat extends Application {
     }
   }
 
+  /**
+   * Handles the inserting of an emoji.
+   * @param {Event} e The event object.
+   */
   insertEmoji (e) {
     const emoji = e.target.innerText
     const chatApp = this.wmWindow.windowElement.querySelector('.chat-app')
