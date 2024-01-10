@@ -104,6 +104,7 @@
     flex-grow: 1;
     margin-bottom: 3%;
     overflow-y: scroll;
+    height: 80%;
 
     .message {
       display: grid;

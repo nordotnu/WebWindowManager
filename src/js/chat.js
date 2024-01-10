@@ -35,8 +35,21 @@ export default class Chat extends Application {
     const textarea = this.appBody.children[0].querySelector('textarea')
     textarea.addEventListener('keydown', (e) => this.sendMessage(e))
 
+    const observer = new MutationObserver(() => {
+      this.loadSavedMessages()
+      observer.disconnect()
+    })
+    observer.observe(this.wmWindow.windowElement, { subtree: true, childList: true })
+
+    const storedUsername = sessionStorage.getItem('username')
+    if (storedUsername !== null) {
+      userInput.value = storedUsername
+      this.username = storedUsername
+    }
+
     this.chatService = new ChatService(this.username, this.channel, (msg) => this.receiveMessage(msg))
     this.chatService.connect()
+
     return this.appBody
   }
 
@@ -49,9 +62,11 @@ export default class Chat extends Application {
     if (!userInput.disabled) {
       this.username = userInput.value
       this.chatService.username = userInput.value
+      sessionStorage.setItem('username', this.username)
       userInput.disabled = true
       userEdit.classList.remove('active')
       userInput.selected = false
+      this.loadSavedMessages()
     } else {
       userInput.disabled = false
       userInput.focus()
@@ -72,6 +87,7 @@ export default class Chat extends Application {
       channelInput.disabled = true
       channelEdit.classList.remove('active')
       channelInput.selected = false
+      this.loadSavedMessages()
     } else {
       channelInput.disabled = false
       channelInput.focus()
@@ -85,21 +101,22 @@ export default class Chat extends Application {
       const chatApp = this.wmWindow.windowElement.querySelector('.chat-app')
       const message = chatApp.querySelector('textarea')
       this.chatService.sendMessage(message.value)
+      console.log(message.value)
       message.value = ''
     }
   }
 
-  receiveMessage (message) {
-
+  receiveMessage (message, store = true) {
     const chatApp = this.wmWindow.windowElement.querySelector('.chat-app')
     const messages = chatApp.querySelector('.messages')
     const messageElement = document.createElement('div')
     messageElement.className = 'message'
 
+    if (store) this.storeMessage(message)
+
     if (message.username === this.username) {
       messageElement.classList.add('self')
     }
-
 
     const user = document.createElement('p')
     user.className = 'user'
@@ -107,8 +124,7 @@ export default class Chat extends Application {
 
     const timeStamp = document.createElement('p')
     timeStamp.className = 'time-stamp'
-    const time = new Date()
-    timeStamp.innerText = `${time.toLocaleString()}`
+    timeStamp.innerText = `${message.timeStamp}`
 
     const content = document.createElement('p')
     content.className = 'content'
@@ -118,6 +134,41 @@ export default class Chat extends Application {
     messageElement.appendChild(timeStamp)
     messageElement.appendChild(content)
     messages.appendChild(messageElement)
-    
+    messages.scrollTo(0, messages.scrollHeight)
+  }
+
+  storeMessage (message) {
+    const storedMessagesJson = sessionStorage.getItem('messages')
+    const jsonMessage = JSON.stringify([message])
+    if (storedMessagesJson !== null) {
+      const storedMessages = JSON.parse(storedMessagesJson)
+      let exist = false
+      for (let i = 0; i < storedMessages.length; i++) {
+        console.log(storedMessages[i], message)
+        exist = exist || JSON.stringify(storedMessages[i]) === JSON.stringify(message)
+      }
+      if (!exist) {
+        storedMessages.push(message)
+        sessionStorage.setItem('messages', JSON.stringify(storedMessages))
+      }
+    } else {
+      sessionStorage.setItem('messages', jsonMessage)
+    }
+  }
+
+  loadSavedMessages () {
+    console.log('loading messages')
+    const storedMessages = sessionStorage.getItem('messages')
+    const chatApp = this.wmWindow.windowElement.querySelector('.chat-app')
+    chatApp.querySelector('.messages').innerHTML = ''
+    if (storedMessages !== null) {
+      const messages = JSON.parse(storedMessages)
+      // Clear messages
+      messages.forEach(message => {
+        if (message.channel === this.channel) {
+          this.receiveMessage(message, false)
+        }
+      })
+    }
   }
 }

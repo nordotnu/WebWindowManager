@@ -13,6 +13,7 @@ export default class ChatService {
     this.socket.onmessage = (event) => {
       const data = JSON.parse(event.data)
       if (data.type === 'message' && data.channel === this.channel) {
+        data.timeStamp = new Date().toLocaleString()
         this.recevieCallback(data)
       }
     }
