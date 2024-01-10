@@ -123,7 +123,7 @@ export default class Desktop {
       if (newWidth > 300) {
         windowElement.style.width = newWidth + 'px'
       }
-      if (newHeight > 350) {
+      if (newHeight > 300) {
         windowElement.style.height = newHeight + 'px'
       }
     }

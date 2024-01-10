@@ -1,3 +1,4 @@
+import Camera from './camera'
 import Chat from './chat'
 import Desktop from './desktop'
 import Memory from './memory'
@@ -11,4 +12,5 @@ function main () {
   const desktop = new Desktop()
   desktop.registerApp(Memory)
   desktop.registerApp(Chat)
+  desktop.registerApp(Camera)
 }
