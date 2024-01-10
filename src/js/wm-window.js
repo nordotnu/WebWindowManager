@@ -143,7 +143,7 @@ export default class WMWindow {
       wmWindow.savedPosition.fullscreen = true
       wmWindow.positionMapper(target.style, wmWindow.savedPosition)
       target.style.width = window.innerWidth + 'px'
-      target.style.height = window.innerHeight + 'px'
+      target.style.height = window.innerHeight - 40 + 'px'
       target.style.top = 0
       target.style.left = 0
       resizer.classList.add('hidden')

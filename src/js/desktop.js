@@ -120,10 +120,10 @@ export default class Desktop {
       const style = window.getComputedStyle(windowElement, null)
       const newWidth = event.clientX - parseInt(style.getPropertyValue('left'))
       const newHeight = event.clientY - parseInt(style.getPropertyValue('top'))
-      if (newWidth > 100) {
+      if (newWidth > 300) {
         windowElement.style.width = newWidth + 'px'
       }
-      if (newHeight > 100) {
+      if (newHeight > 350) {
         windowElement.style.height = newHeight + 'px'
       }
     }

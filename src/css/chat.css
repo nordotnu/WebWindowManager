@@ -2,7 +2,7 @@
   --font-sans-serif: 'Work Sans', sans-serif;
   --black: #1e1e1e;
   --white: #ebebeb;
-  --gray: #262626;
+  --gray: #484848;
   --red: #ff2e2e;
   --green: #3fdc2a;
   --yellow: #ffd606;
@@ -59,6 +59,11 @@
         color: var(--white);
       }
 
+      input:focus {
+        border: 2px solid var(--gray);
+        outline: 0;
+      }
+
       .username-edit,
       .channel-edit {
         padding-right: 5px;
@@ -91,14 +96,58 @@
       }
     }
   }
+
   /* END SETTINGS STYLE */
 
   /* MESSAGES STYLE */
   .messages {
-    background-color: red;
     flex-grow: 1;
-    margin-bottom:3%;
+    margin-bottom: 3%;
+    overflow-y: scroll;
+
+    .message {
+      display: grid;
+      word-break: break-all;
+      background-color: var(--chat-bg);
+      border-radius: 5px;
+      margin-bottom: 5px;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      grid-column-gap: 0px;
+      grid-row-gap: 0px;
+      grid-template-columns: [first] 50% [second] 50%;
+      grid-template-rows: [third] 100%;
+      padding: 5px;
+      margin-right: 10px;
+
+      .user {
+        color: var(--black);
+        font-weight: bold;
+        grid-area: 1 / 1 / 2 / 2;
+      }
+
+      .time-stamp {
+        text-align: right;
+        font-size: small;
+        grid-area: 1 / 2 / 2 / 3;
+        color: var(--gray);
+      }
+
+      .content {
+        grid-area: 2 / 1 / 3 / 3;
+        color: var(--black);
+        border-top: 1px solid var(--black);
+      }
+    }
+
+    .message.self {
+      margin-right: 0px;
+      margin-left: 10px;
+      background-color: var(--white);
+    }
   }
+
+
   /* END MESSAGES STYLE */
 
   /* INPUT STYLE */
@@ -107,12 +156,24 @@
     justify-content: space-around;
     height: 10%;
     min-height: 24px;
+
     textarea {
       width: 90%;
       margin-right: 5%;
       border-radius: 10px;
       resize: none;
+      border-style: solid;
+      color: var(--black);
+      box-sizing: content-box;
+      background: var(--white);
     }
+
+    textarea:focus {
+      background-color: white;
+      outline: 0;
+      border: 2px solid var(--gray);
+    }
+
     .send-btn {
       display: flex;
       justify-content: center;
@@ -122,10 +183,12 @@
       width: 48px;
       border-radius: 10px;
     }
+
     .send-btn:hover {
-    background-color: var(--chat-bg);
+      background-color: var(--chat-bg);
     }
 
   }
+
   /* END INPUT STYLE */
 }

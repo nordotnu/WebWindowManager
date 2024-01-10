@@ -1,4 +1,5 @@
 import Application from './application'
+import ChatService from './chat-service'
 
 export default class Chat extends Application {
   static appName = 'Chat App'
@@ -33,6 +34,9 @@ export default class Chat extends Application {
     sendBtn.addEventListener('click', (e) => this.sendMessage(e))
     const textarea = this.appBody.children[0].querySelector('textarea')
     textarea.addEventListener('keydown', (e) => this.sendMessage(e))
+
+    this.chatService = new ChatService(this.username, this.channel, (msg) => this.receiveMessage(msg))
+    this.chatService.connect()
     return this.appBody
   }
 
@@ -44,6 +48,7 @@ export default class Chat extends Application {
     const userEdit = chatApp.querySelector('.username-edit')
     if (!userInput.disabled) {
       this.username = userInput.value
+      this.chatService.username = userInput.value
       userInput.disabled = true
       userEdit.classList.remove('active')
       userInput.selected = false
@@ -63,6 +68,7 @@ export default class Chat extends Application {
     const channelEdit = chatApp.querySelector('.channel-edit')
     if (!channelInput.disabled) {
       this.channel = channelInput.value
+      this.chatService.channel = channelInput.value
       channelInput.disabled = true
       channelEdit.classList.remove('active')
       channelInput.selected = false
@@ -78,9 +84,40 @@ export default class Chat extends Application {
     if (e.key == null || (e.key === 'Enter' && e.ctrlKey)) {
       const chatApp = this.wmWindow.windowElement.querySelector('.chat-app')
       const message = chatApp.querySelector('textarea')
-      console.log('msg: ', message.value)
-
+      this.chatService.sendMessage(message.value)
       message.value = ''
     }
+  }
+
+  receiveMessage (message) {
+
+    const chatApp = this.wmWindow.windowElement.querySelector('.chat-app')
+    const messages = chatApp.querySelector('.messages')
+    const messageElement = document.createElement('div')
+    messageElement.className = 'message'
+
+    if (message.username === this.username) {
+      messageElement.classList.add('self')
+    }
+
+
+    const user = document.createElement('p')
+    user.className = 'user'
+    user.innerText = message.username
+
+    const timeStamp = document.createElement('p')
+    timeStamp.className = 'time-stamp'
+    const time = new Date()
+    timeStamp.innerText = `${time.toLocaleString()}`
+
+    const content = document.createElement('p')
+    content.className = 'content'
+    content.innerText = message.data
+
+    messageElement.appendChild(user)
+    messageElement.appendChild(timeStamp)
+    messageElement.appendChild(content)
+    messages.appendChild(messageElement)
+    
   }
 }
