@@ -107,10 +107,11 @@
     height: 80%;
 
     .message {
+
       display: grid;
       word-break: break-all;
       background-color: var(--chat-bg);
-      border-radius: 5px;
+      border-radius: 10px;
       margin-bottom: 5px;
       grid-template-columns: repeat(2, 1fr);
       grid-template-rows: repeat(2, 1fr);
@@ -118,8 +119,8 @@
       grid-row-gap: 0px;
       grid-template-columns: [first] 50% [second] 50%;
       grid-template-rows: [third] 100%;
-      padding: 5px;
-      margin-right: 10px;
+      padding: 10px;
+      margin-right: 40px;
 
       .user {
         color: var(--black);
@@ -133,6 +134,7 @@
         font-size: x-small;
         grid-area: 1 / 2 / 2 / 3;
         color: var(--gray);
+        word-break: keep-all;
       }
 
       .content {
@@ -145,7 +147,7 @@
 
     .message.self {
       margin-right: 0px;
-      margin-left: 10px;
+      margin-left: 40px;
       background-color: var(--white);
     }
   }
@@ -177,7 +179,8 @@
       border: 2px solid var(--gray);
     }
 
-    .send-btn ,.emoji-btn {
+    .send-btn,
+    .emoji-btn {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -188,16 +191,20 @@
       cursor: pointer;
     }
 
-    .send-btn:hover, .emoji-btn:hover {
+    .send-btn:hover,
+    .emoji-btn:hover {
       background-color: var(--chat-bg);
     }
+
     .emoji-btn {
       margin-right: 10px;
     }
+
     .emoji-btn img {
       width: 32px;
       height: 32px;
     }
+
     .emojis {
       position: absolute;
       display: flex;
@@ -209,12 +216,14 @@
       box-shadow: var(--black) 3px 3px 3px;
 
     }
+
     .emojis p {
       font-size: large;
       margin-inline: 5px;
       padding: 2px;
       cursor: pointer;
     }
+
     .emojis p:hover {
       background-color: var(--gray);
       border-radius: 5px;

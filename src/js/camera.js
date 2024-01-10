@@ -42,8 +42,9 @@ export default class Camera extends Application {
     })
 
     const constraints = { video: { facingMode: 'user' }, audio: false }
+
     /**
-     *
+     * Handles the video stream
      */
     function cameraStart () {
       navigator.mediaDevices
@@ -53,7 +54,7 @@ export default class Camera extends Application {
           cameraView.srcObject = stream
         })
         .catch(function (error) {
-          console.error('Oops. Something is broken.', error)
+          console.error('ERROR: ', error)
         })
     }
     cameraStart()

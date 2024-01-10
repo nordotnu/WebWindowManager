@@ -12,6 +12,12 @@ export default class Chat extends Application {
   username = 'Anon'
   channel = 'public'
 
+  slideFromLeft = [{ transform: 'translateX(-100%)' },
+    { transform: 'translateX(0%)' }]
+
+  slideFromRight = [{ transform: 'translateX(100%)' },
+    { transform: 'translateX(0%)' }]
+
   /**
    * Gets the HTML Element of the application
    * @returns {HTMLElement} App element
@@ -149,11 +155,10 @@ export default class Chat extends Application {
     const messages = chatApp.querySelector('.messages')
     const messageElement = document.createElement('div')
     messageElement.className = 'message'
-
-    if (store) this.storeMessage(message)
-
+    let animation = this.slideFromLeft
     if (message.username === this.username) {
       messageElement.classList.add('self')
+      animation = this.slideFromRight
     }
 
     const user = document.createElement('p')
@@ -171,8 +176,16 @@ export default class Chat extends Application {
     messageElement.appendChild(user)
     messageElement.appendChild(timeStamp)
     messageElement.appendChild(content)
+
     messages.appendChild(messageElement)
     messages.scrollTo(0, messages.scrollHeight)
+
+    if (store) {
+      this.storeMessage(message)
+      messageElement.animate(animation, { duration: 200, iterations: 1 })
+    } else {
+      messageElement.style.animation = 'none'
+    }
   }
 
   /**
