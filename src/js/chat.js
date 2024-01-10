@@ -32,6 +32,15 @@ export default class Chat extends Application {
 
     const sendBtn = this.appBody.children[0].querySelector('.send-btn')
     sendBtn.addEventListener('click', (e) => this.sendMessage(e))
+
+    const emojiBtn = this.appBody.children[0].querySelector('.emoji-btn')
+    emojiBtn.addEventListener('click', (e) => this.openEmoji(e))
+
+    const emojis = this.appBody.children[0].querySelectorAll('.emojis p')
+    emojis.forEach((p) => {
+      p.addEventListener('click', (e) => this.insertEmoji(e))
+    })
+
     const textarea = this.appBody.children[0].querySelector('textarea')
     textarea.addEventListener('keydown', (e) => this.sendMessage(e))
 
@@ -97,12 +106,14 @@ export default class Chat extends Application {
   }
 
   sendMessage (e) {
-    if (e.key == null || (e.key === 'Enter' && e.ctrlKey)) {
-      const chatApp = this.wmWindow.windowElement.querySelector('.chat-app')
-      const message = chatApp.querySelector('textarea')
-      this.chatService.sendMessage(message.value)
-      console.log(message.value)
-      message.value = ''
+    const chatApp = this.wmWindow.windowElement.querySelector('.chat-app')
+    const message = chatApp.querySelector('textarea')
+    if (e.key == null || (e.key === 'Enter' && !e.shiftKey)) {
+      e.preventDefault()
+      if (message.value.trim().length !== 0) {
+        this.chatService.sendMessage(message.value)
+        message.value = ''
+      }
     }
   }
 
@@ -170,5 +181,25 @@ export default class Chat extends Application {
         }
       })
     }
+  }
+
+  openEmoji (e) {
+    const chatApp = this.wmWindow.windowElement.querySelector('.chat-app')
+    const emojiMenu = chatApp.querySelector('.emojis')
+
+    if (emojiMenu.classList.contains('hidden')) {
+      emojiMenu.classList.remove('hidden')
+    } else {
+      emojiMenu.classList.add('hidden')
+    }
+  }
+
+  insertEmoji (e) {
+    const emoji = e.target.innerText
+    const chatApp = this.wmWindow.windowElement.querySelector('.chat-app')
+    const textarea = chatApp.querySelector('textarea')
+    textarea.value += emoji
+    chatApp.querySelector('.emojis').classList.add('hidden')
+    textarea.focus()
   }
 }
