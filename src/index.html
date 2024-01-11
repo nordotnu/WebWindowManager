@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/memory.css">
   <link rel="stylesheet" href="css/chat.css">
   <link rel="stylesheet" href="css/camera.css">
+  <link rel="stylesheet" href="css/paint.css">
   <link rel="icon" href="img/favicon.svg">
 </head>
 
@@ -115,6 +116,34 @@
     </div>
   </template>
 
+  <!--Paint App Template-->
+ <template id="paint-app">
+  <div class="paint-app">
+    <div class="tools">
+      <div class="tool pen selected"><img src="img/edit.svg"></div>
+      <div class="tool eraser"><img src="img/erase.svg" alt=""></div>
+      <div class="tool size inc"><p>+</p></div>
+      <p class="width">1px</p>
+      <div class="tool size dec"><p>-</p></div>
+    </div>
+    <canvas class="canvas"></canvas>
+    <div class="swatch">
+      <div class="color" style="background-color: white;"></div>
+      <div class="color selected" style="background-color: black;"></div>
+      <div class="color" style="background-color: red;"></div>
+      <div class="color" style="background-color: orangered;"></div>
+      <div class="color" style="background-color: orange;"></div>
+      <div class="color" style="background-color: green;"></div>
+      <div class="color" style="background-color: yellowgreen;"></div>
+      <div class="color" style="background-color: aquamarine;"></div>
+      <div class="color" style="background-color: aqua;"></div>
+      <div class="color" style="background-color: blue;"></div>
+      <div class="color" style="background-color: blueviolet;"></div>
+      <div class="color" style="background-color: purple;"></div>
+      <div class="color" style="background-color: pink;"></div>
+    </div>
+  </div>
+ </template>
   <!--Desktop Icon Template-->
   <template id="icon">
     <div class="icon-body">

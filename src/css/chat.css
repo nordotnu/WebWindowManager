@@ -117,8 +117,6 @@
       grid-template-rows: repeat(2, 1fr);
       grid-column-gap: 0px;
       grid-row-gap: 0px;
-      grid-template-columns: [first] 50% [second] 50%;
-      grid-template-rows: [third] 100%;
       padding: 10px;
       margin-right: 40px;
 

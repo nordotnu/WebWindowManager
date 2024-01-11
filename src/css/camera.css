@@ -1,13 +1,6 @@
 .camera-app {
   --font-sans-serif: 'Work Sans', sans-serif;
-  --black: #1e1e1e;
   --white: #ebebeb;
-  --gray: #484848;
-  --red: #ff2e2e;
-  --green: #3fdc2a;
-  --yellow: #ffd606;
-  --chat-bg: #b3b3b3;
-
   width: 100%;
   height: calc(100% - 48px);
   overflow: hidden;
