@@ -60,6 +60,10 @@ export default class Camera extends Application {
     cameraStart()
   }
 
+  /**
+   * Handles the changing of the video style
+   * @param {Event} e The event object.
+   */
   changeStyle (e) {
     if (e.wheelDeltaX > 0) {
       this.constast += 5

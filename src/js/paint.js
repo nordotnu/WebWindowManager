@@ -64,6 +64,9 @@ export default class Paint extends Application {
     })
   }
 
+  /**
+   * Change the canvas size when the window resizes
+   */
   offsetCanvas () {
     if (this.lastCanvas.src == null) return
     this.canvas.width = this.canvas.offsetWidth
@@ -72,6 +75,10 @@ export default class Paint extends Application {
     this.context.drawImage(this.lastCanvas, 0, 0)
   }
 
+  /**
+   * Handles the start drawing event.
+   * @param {Event} e The event object.
+   */
   startDraw (e) {
     this.drawing = true
     this.context.beginPath()
@@ -83,11 +90,19 @@ export default class Paint extends Application {
     }
   }
 
+  /**
+   * Handles the stop drawing event.
+   * @param {Event} e The event object.
+   */
   stopDraw (e) {
     this.drawing = false
     this.lastCanvas.src = this.canvas.toDataURL('image/png')
   }
 
+  /**
+   * Handles the drawing event.
+   * @param {Event} e The event object.
+   */
   draw (e) {
     if (this.drawing) {
       this.context.lineTo(e.offsetX, e.offsetY)
@@ -95,6 +110,10 @@ export default class Paint extends Application {
     }
   }
 
+  /**
+   * Handles the changing of the current color.
+   * @param {Event} e The event object.
+   */
   selectColor (e) {
     this.color = e.target.style.backgroundColor
     this.colors.forEach(color => {
@@ -105,6 +124,10 @@ export default class Paint extends Application {
     e.target.classList.add('selected')
   }
 
+  /**
+   * Handles the tool change.
+   * @param {Event} e The event object.
+   */
   selectTool (e) {
     const classes = e.target.closest('.tool').classList
     if (classes.contains('size')) {
