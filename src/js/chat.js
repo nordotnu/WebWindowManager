@@ -147,7 +147,7 @@ export default class Chat extends Application {
 
   /**
    * Handles reciving a message.
-   * @param {Message} message The message object.
+   * @param {*} message The message object.
    * @param {boolean} store Wether to store the message in the storage.
    */
   receiveMessage (message, store = true) {
@@ -190,7 +190,7 @@ export default class Chat extends Application {
 
   /**
    * Stores a message in the session storage.
-   * @param {Message} message The message object.
+   * @param {*} message The message object.
    */
   storeMessage (message) {
     const storedMessagesJson = sessionStorage.getItem('messages')

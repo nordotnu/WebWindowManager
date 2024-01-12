@@ -57,9 +57,6 @@ export default class Desktop {
     })
     const iconsGrid = this.desktop.querySelector('.icons-grid')
     iconsGrid.appendChild(icon)
-
-    // TESTING
-    this.openApp(Application)
   }
 
   /**

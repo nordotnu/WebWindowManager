@@ -133,7 +133,6 @@ export default class WMWindow {
 
   /**
    * Handles the fullscreen button
-   * @param {Event} event The event object
    * @param {WMWindow} wmWindow the window object
    */
   fullscreenHandler (wmWindow) {

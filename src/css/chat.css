@@ -189,14 +189,14 @@
       cursor: pointer;
     }
 
+    .emoji-btn {
+      margin-right: 10px;
+    }
     .send-btn:hover,
     .emoji-btn:hover {
       background-color: var(--chat-bg);
     }
 
-    .emoji-btn {
-      margin-right: 10px;
-    }
 
     .emoji-btn img {
       width: 32px;
