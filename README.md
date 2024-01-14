@@ -2,6 +2,9 @@
 ## Description
 PWA is a in-browser window manager build with vanilla javascript. The application is a single page application that enable the user to open multiple applications on the same time using a virtual desktop enviorment.
 
+## Video Presentation
+<a href="https://drive.google.com/drive/folders/132gk_-kVuzacOTmswTB-Wc4Xi-BB0zWQ?usp=drive_link">Video Link (Google Drive)</a>
+
 ## Features
 The app features includes the following.
 ### <img src="src/img/favicon.svg" width="18"/>  The Window Manager:
@@ -89,7 +92,6 @@ The chat application implements a front-end user interface to the websocket chat
 
 The ```ChatService``` accept an username, channel and a callback method to handle receviving a message from the connection. It also handles sending messages.
 Both channel name and username can be changed in a running application. Changing the username also get saved in the Session storage and set as the default for the next window opened.
-
 While the user on a channel all the recevied messages are cached, listening on channel with cached messages will get loaded to and instance of chat app.
 
 In chat app the user also is able to use a limited number of emojis.
@@ -118,3 +120,61 @@ The application uses the *Taskbar* to keep track of the opened window, each wind
 The Memory game has a time limit, if the user did not open all the cards on time, a message will pop up finishing the game and presenting the user with the option to try again.
 
 ### 8. Documentation on code structure
+
+<img src="diagram.svg"/>
+
+
+The code is structured into modules, each module contain an class, the class ```Desktop``` is responsble for the opening the application by creating a window object and linking the application contents to the window element as well as creating a desktop icon on the registration of an application and managing the ```Taskbar```. Handling of the moving resizing the a window is also the responsiblity of the ```Desktop``` class.
+
+Upon constructing a ```WMWindow``` object a window element will be created dynamiclly based on the argument that the application requires *i.e if the window is resizable.*
+Drag and move the windows is implemented in both ```Desktop```and ```WMWindow``` the reasoning for this is that the desktop element is the drop zone while the draggable object is the window element.
+
+All of the window applications are classes the extends the class ```Application``` and has a template that includes the main HTML of the application body. Each application has a name, icon, options and id, the id is used to query the template of the application. The classes are registered in the ```Desktop``` object and initialized each time the application is opened.
+This feature makes this project easy to improve by adding unlimited number of other applications without changing the base code that handles the windows and the desktop itself.
+
+## Installation
+
+To download and start the application, follow these steps:
+
+1. Clone the repository to your local machine:
+
+    ```bash
+    git clone git@gitlab.lnu.se:1dv528/student/nm222ra/a3-spa.git
+    ```
+
+2. Navigate to the project directory:
+
+    ```bash
+    cd a3-spa
+    ```
+
+3. Use npm to install the required packages:
+    ``` bash
+    npm i
+    ```
+
+4. Build and run the project:
+    ``` bash
+    npm run build && npm run serve
+    ```
+
+
+## Linters
+
+This project includes linting tools to maintain code quality. To execute the linters:
+
+
+1. Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+2. run the linters using the command:
+
+    ```bash
+    npm run lint
+    ```
+
+
+These commands will analyze your code and provide feedback on code quality and style adherence.
