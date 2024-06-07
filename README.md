@@ -2,8 +2,8 @@
 ## Description
 PWA is a in-browser window manager build with vanilla javascript. The application is a single page application that enable the user to open multiple applications on the same time using a virtual desktop enviorment.
 
-## Video Presentation
-<a href="https://drive.google.com/drive/folders/132gk_-kVuzacOTmswTB-Wc4Xi-BB0zWQ?usp=drive_link">Video Link (Google Drive)</a>
+## Demon
+<a href="https://pwd.nor.nu">Demo Link</a>
 
 ## Features
 The app features includes the following.
